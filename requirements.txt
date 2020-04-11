@@ -1,0 +1,7 @@
+matplotlib
+pandas
+numpy
+seaborn
+yattag
+world-bank-data
+
