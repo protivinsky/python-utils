@@ -5,7 +5,3 @@ Python tooling for data analysis and a few ad-hoc scripts related with faktaokli
 - plotting with multiple "plot pages" in a single one does not work out of the box either, see the comment in libs/plots.py
 - for viewing dataframes, it's handy to have Tad installed and set as a default viewer for CSV files - https://www.tadviewer.com/
 
-Yes, and I randomly mix Czech and English language.
-
-
-
