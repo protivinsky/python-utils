@@ -3,6 +3,29 @@ from yattag import Doc, indent
 from libs.utils import create_stamped_temp, slugify
 import matplotlib.pyplot as plt
 
+# NOTE - Does not work out of the box, needs a fix:
+#
+# Annoyingly, the js loading of subpages violates Cross-Origin Requests policy in all browsers
+# when files are served locally via file:///. Works fine for http protocol though.
+# It is possible to use iframes rather than js loader, but it's ugly and has other issues (multiple nested scrollbars).
+#
+# Workarounds:
+#   - Firefox:
+#       - go to about:config -> search for privacy.file_unique_origin and toggle
+#       - then set up Firefox as the default for opening .htm files (that's the reason why I do not use .html)
+#   - Chrome
+#       - can be started with "--allow-file-access-from-files", then it should just work
+#       - it would be possible to start the appropriate process in .show, but I have not tried
+#           - one workaround is enough for me
+#       - https://stackoverflow.com/a/18137280
+#   - Edge:
+#       - until recently, it was the only browser not enforcing the CORS policy for local files, so it just
+#           worked. The new version of Edge enforces the same, do not know how to get around there.
+#   - or it is possible to use local webserver and serve the files via it
+#       - CORS policy is respected with http
+#       - python webserver works fine, just serving the directory: python -m http.server 8000
+#       - however seems more hassle than just changing firefox config...
+
 
 class Chart:
 
@@ -47,6 +70,7 @@ class Chart:
         os.startfile('{}/page.htm'.format(path))
 
 
+# I am not using it at the end, not sure if it works correctly.
 class Text:
 
     def __init__(self, texts, width=750, title=None):

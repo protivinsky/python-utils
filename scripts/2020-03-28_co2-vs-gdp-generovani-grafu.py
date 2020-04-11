@@ -1,13 +1,8 @@
 # imports
 #region
 import os
-import pyreadstat
 import pandas as pd
 import numpy as np
-from statsmodels.stats.weightstats import DescrStatsW
-from sklearn.linear_model import LinearRegression
-import statsmodels.api as sm
-import statsmodels.formula.api as smf
 import seaborn as sns
 import matplotlib as mpl
 mpl.use('Agg')
@@ -22,7 +17,6 @@ plt.ioff()
 # --- CHARTS GENERATION ---
 # Can I generate the usual charts from Python?
 
-root = 'D:\\projects\\fakta-o-klimatu\\work\\423-emisni-intenzita'
 colors = {
     'Asie': ('#c32b2a', '#f17073', '#da7c7b', 'f6a6a8'),
     'Severní Amerika': ('#2d2e73', '#3e4ea0', '#7d7ea8', '#8791c4'),
@@ -33,32 +27,14 @@ colors = {
     'Austrálie a Nový Zéland': ('#0E9487', '#', '#6abdb5', '#')
 }
 
-colors['Afrika'][2]
 conts = list(colors.keys())
 
-plt.rcParams['figure.figsize'] = 12.5, 7
-plt.rcParams['hatch.linewidth'] = 0.8
-
 plt.rcParams['figure.figsize'] = 16, 9
+# plt.rcParams['figure.figsize'] = 12.5, 7
 plt.rcParams['hatch.linewidth'] = 0.8
-
-df = pd.read_csv(root + '\\data.csv', decimal=',')
-df.dtypes
-df.show()
-type(df['gdp'].iloc[3])
-
-
-df['pop'] = np.float_(df['pop'].apply(lambda x: x.replace('\xa0', '')))
-df['gdp'] = np.float_(df['gdp'].apply(lambda x: x.replace('\xa0', '')))
-df['gdp_per_capita'] = np.float_(df['gdp_per_capita'].apply(lambda x: x.replace('\xa0', '')))
-df['ghg_per_gdp'] = np.float_(df['ghg_per_gdp'])
-
-df.dtypes
-df.show()
-
 
 # 1. emise svet na osobu ---
-df1 = pd.read_csv(root + '\\data1.csv', decimal=',')
+df1 = pd.read_csv('data\\data1.csv', decimal=',')
 
 df1['pop'] = np.float_(df1['pop'].apply(lambda x: x.replace('\xa0', '')))
 df1['gdp'] = np.float_(df1['gdp'].apply(lambda x: x.replace('\xa0', '')))
@@ -94,7 +70,7 @@ fig_per_capita = fig
 
 
 # 2. emise svet na hdp ---
-df2 = pd.read_csv(root + '\\data2.csv', decimal=',')
+df2 = pd.read_csv('data\\data2.csv', decimal=',')
 
 df2['pop'] = np.float_(df2['pop'].apply(lambda x: x.replace('\xa0', '')))
 df2['gdp'] = np.float_(df2['gdp'].apply(lambda x: x.replace('\xa0', '')))
@@ -124,19 +100,14 @@ ax.set(xlim=(0, 130e12), ylim=(0, 1300))
 ax.set(xlabel='GDP', ylabel='g CO2eq per $', title='CO2eq emissions per GDP (2015)')
 ax.show()
 
-
-
 fig_per_gdp = fig
 
-
-'{:.3g}'.format(1.23456)
 
 # 3. emise svet na gdp vs ghg per capita ---
 # a) horizontal
 df1.gdp_per_capita.max()
 df1.dtypes
 
-plt.rcParams['figure.figsize'] = 16, 9
 fig, ax = plt.subplots()
 # c = 'Asie'
 x = 0
@@ -171,12 +142,9 @@ fig_relative = fig
 Chart([fig_per_capita, fig_relative, fig_per_gdp], title='Emissions per capita and per GDP', cols=2, format='svg').show()
 Selector([fig_per_capita, fig_relative, fig_per_gdp], title='Emissions per capita and per GDP').show()
 
-fig.savefig(root + '\\per_capita.svg')
-fig.savefig(root + '\\per_capita.pdf')
+fig.savefig('output\\per_capita.svg')
+fig.savefig('output\\per_capita.pdf')
 
-436 * 107
-124 / 72
-5.1 / 13
 
 # df1.dtypes
 # colors_for_conts = pd.DataFrame({'cont': conts, 'color': [colors[c][0] for c in conts]})
@@ -222,8 +190,8 @@ plt.text(1e6 / 6e4 - 3, 6.25e4, 'Hyperboly jsou emise na osobu (t CO2 eq)', colo
 ax.set(xlabel='Emise na HDP (g CO2eq / $)', ylabel='GDP na osobu ($)', title='Emise na HDP a na osobu')
 ax.show()
 
-fig.savefig(root + '\\emise-hdp-per-capita-hyper-pop.pdf')
-fig.savefig(root + '\\emise-hdp-per-capita-hyper-pop.svg')
+fig.savefig('output\\emise-hdp-per-capita-hyper-pop.pdf')
+fig.savefig('output\\emise-hdp-per-capita-hyper-pop.svg')
 
 # puvodni graf
 gdf1 = df1.groupby('cont')
@@ -256,15 +224,7 @@ ax.show()
 
 
 
-
-
-
-
-
-
-
-
-fig.savefig(root + '\\per_hdp.pdf')
+fig.savefig('output\\per_hdp.pdf')
 df1.show()
 df2.show()
 
@@ -302,35 +262,3 @@ Chart(ax).show()
 Chart(ax, format='svg').show()
 
 
-
-
-
-
-    cdf = df1.loc[gdf1.groups[c]].sort_values('ghg_per_capita', ascending=False).reset_index(drop=True)
-    cs = colors[c]
-    for i, row in cdf.iterrows():
-        x = x + xgap
-        plt.text(x + 0.5 * row['pop'] - 4 * xgap, row['ghg_per_capita'] + ygap, row['region'], rotation=45, fontsize=9)
-        rec = mpl.patches.Rectangle((x, 0), row['pop'], row['ghg_per_capita'], ec=None, fc=cs[i % 2])
-        ax.add_patch(rec)
-        x = x + row['pop']
-    x = x + 20 * xgap
-
-ax.set(xlim=(0, 9.4e9), ylim=(0, 38))
-ax.set(xlabel='Population', ylabel='t CO2eq per capita', title='CO2eq emissions per capita (2015)')
-ax.show()
-
-
-
-
-
-
-
-
-3.595 * 258.4
-4329 / 7188
-
-25.631
-25.631 / 46.907
-
-7188 * 25631 / 4329
