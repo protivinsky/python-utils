@@ -3,5 +3,7 @@ pandas
 numpy
 seaborn
 yattag
+reportree
+docx
 world-bank-data
 

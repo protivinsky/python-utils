@@ -1,7 +1,10 @@
 import os
 from yattag import Doc, indent
-from libs.utils import create_stamped_temp, slugify
+from libs.utils import create_stamped_temp
+from reportree.io import slugify
 import matplotlib.pyplot as plt
+
+# 2022-12-13: This code is obsolete now, use the ReporTree package: https://pypi.org/project/reportree/
 
 # NOTE - Does not work out of the box, needs a fix:
 #
